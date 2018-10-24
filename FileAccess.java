@@ -1,48 +1,77 @@
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 
-public class FileAccess implements java.io.Serializable {
-    private static final long serialVersionUID = 3614364148119987323L;
-    private String filePath;
-    
-    private RandomAccessFile file;
-
-   
-    public FileAccess(String filePath) {
-    	this.filePath = filePath;
-    	try {
-			this.file = new RandomAccessFile(this.filePath, "rw");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+public class FileAccess {
+	private RandomAccessFile file;
+	private String fileName;
+	
+	
+	public FileAccess(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public void saveWarehouse(Warehouse warehouse) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutput out = null;
+		try {
+			this.file = new RandomAccessFile(this.fileName, "rw");
+		} catch (FileNotFoundException e) {}
+		try {
+		  out = new ObjectOutputStream(bos);   
+		  out.writeObject(warehouse);
+		  out.flush();
+		  byte[] yourBytes = bos.toByteArray();
+		  this.file.write(yourBytes);
+		  this.file.close();
+		} catch(IOException e){
+			// ignore this exception
+		}finally {
+		  try {
+		    bos.close();
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
+		}
+	}
+	public Warehouse readWarehouse() {
+		Warehouse w = null;
+		byte[] document = null;
+		try {
+			this.file = new RandomAccessFile(this.fileName, "rw");
+		} catch (FileNotFoundException e) {}
+		try {
+			document = new byte[(int) file.length()];
+			this.file.readFully(document);
+			this.file.close();
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
-    }
-    public void saveWarehouse(Warehouse warehouse) {
-        try {
-        	FileOutputStream fos = new FileOutputStream(this.file.getFD());
-        	ObjectOutputStream objectOutputStream = new ObjectOutputStream(fos);
-			objectOutputStream.writeObject(warehouse);
-			objectOutputStream.flush();
-			objectOutputStream.close();
-		} catch (Exception e) {
+	    
+		ByteArrayInputStream bis = new ByteArrayInputStream(document);
+		ObjectInput in = null;
+		try {
+		  in = new ObjectInputStream(bis);
+		  w = (Warehouse)in.readObject(); 
+		  
+		} catch(Exception e){
+			
+		}finally {
+		  try {
+		    if (in != null) {
+		      in.close();
+		    }
+		  } catch (IOException ex) {
+		    // ignore close exception
+		  }
 		}
-        
-    }
-    public Warehouse readWarehouse() {
-    	Warehouse warehouse = null;
-    	try {
-    		FileInputStream fis = new FileInputStream(this.file.getFD());
-			ObjectInputStream objectInputStream = new ObjectInputStream(fis);
-			warehouse = (Warehouse)objectInputStream.readObject();
-			warehouse.setFileAccess(new FileAccess("baza.txt"));
-		} catch (Exception e) {
-		}
-    	
-    	return warehouse;
-    }
-
+		
+		return w;
+	}
 }

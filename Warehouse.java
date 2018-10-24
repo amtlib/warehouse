@@ -1,12 +1,13 @@
+import java.io.IOException;
 import java.util.*;
 
 public class Warehouse implements java.io.Serializable {
     private static final long serialVersionUID = -5080612003712429459L;
-    private Shelf[] allShelves = new Shelf[100]; //ArrayList would be better
+    private Shelf[] allShelves = new Shelf[100];
     
-    private Employee[] allEmployees = new Employee[50]; // look up
-    private Product[] stock = new Product[1000]; // look up up
-    private transient FileAccess fileAccess = new FileAccess("baza.txt");
+    private Employee[] allEmployees = new Employee[50]; 
+    private Product[] stock = new Product[1000]; 
+    private transient FileAccess fileAccess = new FileAccess("baza");
     
     
     public Warehouse() {
@@ -137,7 +138,7 @@ public class Warehouse implements java.io.Serializable {
         Shelf shelf = new Shelf();
         for (int i = 0; i < allShelves.length; i++) {
             if (allShelves[i] == null) {
-                allShelves[i] = shelf;
+                allShelves[i] = shelf;       
                 fileAccess.saveWarehouse(this);
                 return;
             }
@@ -545,10 +546,6 @@ public class Warehouse implements java.io.Serializable {
                 }
             } else if (userInput.equals("16")) { //Show products sorted
                 warehouse.showProductsSorted();
-            } else if(userInput.equals("17")) { //Save data
-            	warehouse.fileAccess.saveWarehouse(warehouse);
-            } else if(userInput.equals("18")) {
-            	warehouse = warehouse.fileAccess.readWarehouse();
             }
             else if (userInput.equals("exit")) {
             	warehouse.fileAccess.saveWarehouse(warehouse);
