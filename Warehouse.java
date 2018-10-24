@@ -15,10 +15,31 @@ public class Warehouse implements java.io.Serializable {
     	if(w != null) {
     		this.allEmployees = w.getAllEmployees();
     		this.stock = w.getStock();
-    		this.allShelves = w.getAllShelves();    		
+    		this.allShelves = w.getAllShelves();
+    		int maxEmployeeId = -1;
+    		for(int i = 0;i<this.allEmployees.length;i++) {
+    			if(this.allEmployees[i] != null && this.allEmployees[i].getId() > maxEmployeeId) maxEmployeeId = this.allEmployees[i].getId();
+    		}
+    		int maxProductId = -1;
+    		for(int i = 0;i<this.stock.length;i++) {
+    			if(this.stock[i] != null && this.stock[i].getId() > maxProductId) maxProductId = this.stock[i].getId();
+    		}
+    		int maxShelfId = -1;
+    		for(int i = 0;i<this.allShelves.length;i++) {
+    			if(this.allShelves[i] != null && this.allShelves[i].getId() > maxShelfId) maxShelfId = this.allShelves[i].getId();
+    		}
+    		Employee.setIdCounter(maxEmployeeId+1);
+    		Product.setIdCounter(maxProductId+1);
+    		Shelf.setIdCounter(maxShelfId+1);
     	}
     }
-    
+    public int getNumberOfProducts() {
+    	int counter = 0;
+    	for(int i =0;i<stock.length;i++) {
+    		if(stock[i] != null) counter++;
+    	}
+    	return counter;
+    }
     public Shelf[] getAllShelves() {
 		return allShelves;
 	}
@@ -328,7 +349,7 @@ public class Warehouse implements java.io.Serializable {
                 int selection;
                 try {
                     selection = scanner.nextInt();
-                    if (selection < 1 || selection >= shelvesIds.length) {
+                    if (selection < 1 || selection > shelvesIds.length) {
                         System.out.println("Input error");
                         continue;
                     }

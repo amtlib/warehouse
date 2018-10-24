@@ -1,7 +1,15 @@
 public class Employee implements java.io.Serializable {
     private static final long serialVersionUID = -4666704137939530367L;
     private static int idCounter = 1;
-    private int id;
+    public static int getIdCounter() {
+		return idCounter;
+	}
+
+	public static void setIdCounter(int idCounter) {
+		Employee.idCounter = idCounter;
+	}
+
+	private int id;
     private String lastName;
 
     public Employee(String firstName, String lastName) {

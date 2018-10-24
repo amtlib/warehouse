@@ -13,7 +13,15 @@ public class Product implements Comparable<Product>, Serializable {
     private int id;
     private static int idCounter = 0;
 
-    public Product(String barcode, String name, double size, double weight, Shelf shelf) {
+    public static int getIdCounter() {
+		return idCounter;
+	}
+
+	public static void setIdCounter(int idCounter) {
+		Product.idCounter = idCounter;
+	}
+
+	public Product(String barcode, String name, double size, double weight, Shelf shelf) {
         super();
         this.barcode = barcode;
         this.name = name;

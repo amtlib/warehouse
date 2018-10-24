@@ -2,7 +2,15 @@ public class Shelf implements java.io.Serializable {
     private static final long serialVersionUID = -7971985533179434404L;
     private static int idCounter = 1;
     private int id;
-    private Employee responsibleEmployee;
+    public static int getIdCounter() {
+		return idCounter;
+	}
+
+	public static void setIdCounter(int idCounter) {
+		Shelf.idCounter = idCounter;
+	}
+
+	private Employee responsibleEmployee;
 
     public Shelf() {
         this.id = idCounter++;
